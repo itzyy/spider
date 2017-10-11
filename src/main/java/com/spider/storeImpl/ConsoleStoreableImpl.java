@@ -1,7 +1,9 @@
 package com.spider.storeImpl;
 
-import com.spider.store.Storeable;
+import com.spider.domain.JdPage;
 import com.spider.domain.Page;
+import com.spider.domain.PoiPage;
+import com.spider.store.Storeable;
 
 /**
  * create 'spider','goodsinfo','spec'
@@ -14,6 +16,8 @@ import com.spider.domain.Page;
 public class ConsoleStoreableImpl implements Storeable {
 
     public void store(Page page) {
-        System.out.println(page.getUrl()+"====="+page.getValues().get("price"));
+//        System.out.println(jdPage.getUrl()+"====="+ jdPage.getValues().get("price"));
+        System.out.println(page.toString());
     }
+
 }

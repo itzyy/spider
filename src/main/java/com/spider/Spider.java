@@ -1,6 +1,6 @@
 package com.spider;
 
-import com.spider.domain.Page;
+import com.spider.domain.JdPage;
 import com.spider.download.Downloadable;
 import com.spider.downloadImpl.HttpClientDownloadableImpl;
 import com.spider.process.Processable;
@@ -21,13 +21,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class Spider {
+public class Spider{
 
 
     private Logger logger = LoggerFactory.getLogger(Spider.class);
 
-    private Downloadable downloadable = new HttpClientDownloadableImpl();
-    private Processable processable;
+    private Downloadable<JdPage> downloadable = new HttpClientDownloadableImpl();
+    private Processable<JdPage> processable;
     private Storeable storeable = new ConsoleStoreableImpl();
     private Repositoyable repositoyable = new QueueRepositorableImpl();
     //创建固定线程池
@@ -45,25 +45,25 @@ public class Spider {
             if (StringUtils.isNotBlank(url)) {//判断是否为空
 //                fixedThreadPool.execute(new Runnable() {
 //                    public void run() {
-//                        Page page = Spider.this.download(url);
-//                        Spider.this.process(page);
-//                        for (String nextUrl : page.getUrls()) {
+//                        JdPage jdPage = Spider.this.download(url);
+//                        Spider.this.process(jdPage);
+//                        for (String nextUrl : jdPage.getUrls()) {
 //                            Spider.this.repositoyable.add(nextUrl);
 //                        }
 //                        if (url.startsWith("http://item.jd.com")) {
-//                            Spider.this.store(page);
+//                            Spider.this.store(jdPage);
 //                        }
 //                        // 休息。防止爬虫ip被封
 //                        SleepUtils.sleep(Config.million_1);
 //                    }
 //                });
-                Page page = Spider.this.download(url);
-                Spider.this.process(page);
-                for (String nextUrl : page.getUrls()) {
+                JdPage jdPage = Spider.this.download(url);
+                Spider.this.process(jdPage);
+                for (String nextUrl : jdPage.getUrls()) {
                     Spider.this.repositoyable.add(nextUrl);
                 }
                 if (url.startsWith("http://item.jd.com")) {
-                    Spider.this.store(page);
+                    Spider.this.store(jdPage);
                 }
                 // 休息,防止爬虫ip被封
                 SleepUtils.sleep(Config.million_1);
@@ -97,7 +97,7 @@ public class Spider {
     /**
      * 下载
      */
-    public Page download(String url) {
+    public JdPage download(String url) {
         return this.downloadable.download(url);
 
     }
@@ -111,15 +111,15 @@ public class Spider {
      * //div 代表所有标签下面的div
      * //div[@class='sku-name'] 代表所有标签下面的div class是sku-name
      */
-    public void process(Page page) {
-        this.processable.process(page);
+    public void process(JdPage jdPage) {
+        this.processable.process(jdPage);
     }
 
     /**
      * 入库存储
      */
-    public void store(Page page) {
-        this.storeable.store(page);
+    public void store(JdPage jdPage) {
+        this.storeable.store(jdPage);
     }
 
     public void setDownloadable(Downloadable downloadable) {

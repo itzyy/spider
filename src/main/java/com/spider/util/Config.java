@@ -19,7 +19,15 @@ public class Config {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 线程变量
+     */
     public static int nThread=Integer.valueOf(properties.getProperty("nThread"));
     public static int million_1=Integer.valueOf(properties.getProperty("million_1"));
     public static int million_5=Integer.valueOf(properties.getProperty("million_5"));
+    /**
+     * 文件变量
+     */
+    public static String filePath=properties.getProperty("filePath");
 }

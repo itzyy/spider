@@ -1,5 +1,7 @@
 package com.spider.util;
 
+import com.spider.domain.JdPage;
+import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
 
@@ -49,5 +51,18 @@ public class HtmlUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+
+    /**
+     * 获取下载界面tagnode
+     * @param jdPage
+     * @return
+     */
+    public static TagNode cleanNode(JdPage jdPage) {
+        //使用htmlcleaner解析对象
+        HtmlCleaner htmlCleaner = new HtmlCleaner();
+        //对页面进行封装。转换成一个tagnode对象,通过xpath对页面元素可以进行快速标记
+        return htmlCleaner.clean(jdPage.getContent());
     }
 }

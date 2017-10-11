@@ -1,5 +1,6 @@
 package com.spider.store;
 
+import com.spider.domain.JdPage;
 import com.spider.domain.Page;
 
 /**

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class RedisRepositorableImpl implements Repositoyable {
     private RedisUtils redisUtils = new RedisUtils();
 
-    public void add(String nextUrl) {
+    public synchronized void add(String nextUrl) {
         this.redisUtils.add(RedisUtils.key, nextUrl);
     }
 
