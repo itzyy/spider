@@ -29,7 +29,7 @@ public class PoiSpider {
 
     private Downloadable<PoiPage> downloadable;
     private Processable<PoiPage> processable;
-    private Storeable storeable ;
+    private Storeable storeable;
     private Repositoyable repositoyable;
     //创建固定线程池
     private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(Config.nThread);
@@ -43,7 +43,9 @@ public class PoiSpider {
         // 这个地方需要进行修改，
         // 单独创建一个程序，负责向url仓库添加入口地址，定时添加，每天凌晨添加一次，可以实现每天循环抓取商品数据
         // 实现一个url调度器
-        String url = "http://www.poi86.com/poi/province/131.html";
+        String url = "http://www.poi86.com/poi/district/1115/1.html";
+
+//        String url = "http://www.poi86.com/poi/province/131.html";
         spider.setSendUrl(url);
         //启动爬虫
         spider.start();
@@ -57,18 +59,26 @@ public class PoiSpider {
         logger.info("启动爬虫");
         while (true) {
             final String url = this.repositoyable.poll();
-            if (StringUtils.isNotBlank(url)) {//判断是否为空
+            //判断是否为空
+            if (StringUtils.isNotBlank(url)) {
                 fixedThreadPool.execute(new Runnable() {
                     public void run() {
                         PoiPage poiPage = PoiSpider.this.download(url);
-                        PoiSpider.this.process(poiPage);
-                        for (String nextUrl : poiPage.getUrls()) {
-                            PoiSpider.this.repositoyable.add(nextUrl);
-                        }
-                        Pattern pattern = Pattern.compile("http://www.poi86.com/poi/[0-9]+.html");
-                        Matcher matcher = pattern.matcher(url);
-                        if (matcher.find()) {
-                              PoiSpider.this.store(poiPage);
+                        //如果内容为空，说明下载失败
+                        if (StringUtils.isNotBlank(poiPage.getContext())) {
+                            PoiSpider.this.process(poiPage);
+                            for (String nextUrl : poiPage.getUrls()) {
+                                PoiSpider.this.repositoyable.add(nextUrl);
+                            }
+                            Pattern pattern = Pattern.compile("http://www.poi86.com/poi/[0-9]+.html");
+                            Matcher matcher = pattern.matcher(url);
+                            if (matcher.find()) {
+                                PoiSpider.this.store(poiPage);
+                            }
+                        } else {
+                            // 下载失败，将连接放入到redis中
+                            System.out.println("重新放入到redis："+poiPage.getUrl());
+                            PoiSpider.this.repositoyable.add(url);
                         }
                     }
                 });

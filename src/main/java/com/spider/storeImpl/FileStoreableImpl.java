@@ -9,8 +9,7 @@ import com.spider.util.FileUtils;
  */
 public class FileStoreableImpl implements Storeable {
 
-    public void store(Page page) {
-        System.out.println("=========="+page.toString());
+    public synchronized void store(Page page) {
         FileUtils.writeToFile(page.toString());
     }
 }

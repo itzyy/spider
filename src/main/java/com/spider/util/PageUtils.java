@@ -29,7 +29,7 @@ public class PageUtils {
         //获取httpclient对象（可以任务是获取到了一个浏览器对象）
         HttpClientBuilder builder = HttpClients.custom();
         //设置代理ip,不能直接写死，建议从ip代理库获取
-        HttpHost proxy = new HttpHost("42.4.120.99", 80);
+        HttpHost proxy = new HttpHost("110.73.0.132", 8123);
         CloseableHttpClient client =  builder.setProxy(proxy).build();
 //        CloseableHttpClient client =  builder.build();
 
@@ -48,7 +48,7 @@ public class PageUtils {
             logger.info("页面下载成功，消耗时间：{}，url:{}",System.currentTimeMillis()-startTime,url);
         } catch (IOException e) {
             //可以在这里把失效的代理ip从本地代理库中删除掉，或者记住后，让后面的其他程序分析日志进行处理
-            logger.error("页面下载失败，url:{}",url);
+            logger.error("页面下载失败，url:{},返回内容",url,content);
             e.printStackTrace();
         }
         return content;

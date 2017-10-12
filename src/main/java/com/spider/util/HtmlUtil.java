@@ -22,6 +22,7 @@ public class HtmlUtil {
      * @return
      */
     public static String getText(TagNode tagNode,String xpath){
+        init();
         try {
             Object[] nodes = tagNode.evaluateXPath(xpath);
             if(nodes!=null && nodes.length>0){
@@ -41,6 +42,7 @@ public class HtmlUtil {
      * @return
      */
     public static String getAttributeByName(TagNode tagNode,String xpath,String attName){
+        init();
         try {
             Object[] nodes = tagNode.evaluateXPath(xpath);
             if(nodes!=null && nodes.length>0){
@@ -60,9 +62,17 @@ public class HtmlUtil {
      * @return
      */
     public static TagNode cleanNode(JdPage jdPage) {
+        init();
         //使用htmlcleaner解析对象
         HtmlCleaner htmlCleaner = new HtmlCleaner();
         //对页面进行封装。转换成一个tagnode对象,通过xpath对页面元素可以进行快速标记
         return htmlCleaner.clean(jdPage.getContent());
+    }
+
+    /**
+     * 初始化变量
+     */
+    private static void init(){
+        result ="";
     }
 }

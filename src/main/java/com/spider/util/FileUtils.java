@@ -13,15 +13,14 @@ public class FileUtils {
     private static BufferedWriter buff;
 
     public static void writeToFile(String str) {
-        try {
-            if (writer == null) {
-                writer = new FileWriter(Config.filePath, true);
-                buff = new BufferedWriter(writer);
-            }
+        try{
+            FileWriter fileWriter =new FileWriter(Config.filePath,true);
+            BufferedWriter buff =new BufferedWriter(fileWriter);
             buff.append(str);
             buff.append("\n");
             buff.flush();
-            //buff.close();
+            buff.flush();
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
