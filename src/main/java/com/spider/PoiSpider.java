@@ -77,7 +77,6 @@ public class PoiSpider {
                             }
                         } else {
                             // 下载失败，将连接放入到redis中
-                            System.out.println("重新放入到redis："+poiPage.getUrl());
                             PoiSpider.this.repositoyable.add(url);
                         }
                     }

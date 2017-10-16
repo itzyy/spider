@@ -11,6 +11,7 @@ public class RedisUtils {
 	public static String start_url = "start_url";
 	
 	public static String key = "spider.todo.url";
+	public static String proxy = "s_proxy_ip_s";
 	
 	
 	JedisPool jedisPool = null;
