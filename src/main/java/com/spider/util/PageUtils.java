@@ -29,10 +29,10 @@ public class PageUtils {
         //获取httpclient对象（可以任务是获取到了一个浏览器对象）
         HttpClientBuilder builder = HttpClients.custom();
         //设置代理ip,不能直接写死，建议从ip代理库获取
-        HttpHost proxy = new HttpHost("114.217.11.247", 8118);
+//        HttpHost proxy = new HttpHost("114.217.11.247", 8118);
 //        HttpHost proxy = new HttpHost("110.73.0.132", 8123);
-        CloseableHttpClient client =  builder.setProxy(proxy).build();
-//        CloseableHttpClient client =  builder.build();
+//        CloseableHttpClient client =  builder.setProxy(proxy).build();
+        CloseableHttpClient client =  builder.build();
 
         //封装get请求
         HttpGet httpGet = new HttpGet(url);;

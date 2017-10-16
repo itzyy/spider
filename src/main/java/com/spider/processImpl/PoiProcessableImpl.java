@@ -33,19 +33,19 @@ public class PoiProcessableImpl implements Processable<PoiPage> {
                 }
             } else if (page.getUrl().startsWith("http://www.poi86.com/poi/district")) {//是否第三页
                 Object[] district = rootNode.evaluateXPath("//table//a");
-                for (Object districtObj : district) {
-                    TagNode districtNode = (TagNode) districtObj;
-                    String districtStr = districtNode.getAttributeByName("href");
-                    page.setAdd("http://www.poi86.com" + districtStr);
-                }
+                //只选择名称href,不选择类型
+                TagNode districtNode = (TagNode) district[0];
+                String districtStr = districtNode.getAttributeByName("href");
+                page.setAdd("http://www.poi86.com" + districtStr);
+
                 //读取下一页地址
                 Object[] nextPages = rootNode.evaluateXPath("//ul[@class='pagination']//a");
-                if(nextPages!=null&&nextPages.length>0){
-                    Object nextPage = nextPages[nextPages.length-3];
+                if (nextPages != null && nextPages.length > 0) {
+                    Object nextPage = nextPages[nextPages.length - 3];
                     TagNode node = (TagNode) nextPage;
                     String href = node.getAttributeByName("href");
                     String disabled = node.getParent().getAttributeByName("class");
-                    if(disabled==null){
+                    if (disabled == null) {
                         page.setAdd("http://www.poi86.com" + href);
                     }
                 }
