@@ -5,7 +5,9 @@ package com.spider.reposit;
  */
 public interface Repositoyable {
 
-   public void add(String nextUrl);
+    public void add(String nextUrl);
 
     public String poll();
+
+    public void backUp(String key, String value);
 }

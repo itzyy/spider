@@ -32,7 +32,7 @@ public class HbaseStoreableImpl implements Storeable {
             hbaseUtils.put(HbaseUtils.TABLE_NAME, productNo, HbaseUtils.COLUMNFAMILY_2, HbaseUtils.COLUMNFAMILY_2, jdPage.getValues().get("spec"));
 
             //存储数据的rowkey方面后期建议索引
-            redisUtils.add("es_index", productNo);
+            redisUtils.add_s("es_index", productNo);
         } catch (IOException e) {
             e.printStackTrace();
         }

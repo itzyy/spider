@@ -39,4 +39,9 @@ public class RandomQueueRepository implements Repositoyable {
         Queue<String> queue = map.get(keys[nextInt]);
         return queue.poll();
     }
+
+    @Override
+    public void backUp(String key, String value) {
+
+    }
 }

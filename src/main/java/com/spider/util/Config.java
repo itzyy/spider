@@ -30,4 +30,12 @@ public class Config {
      * 文件变量
      */
     public static String filePath=properties.getProperty("filePath");
+    /**
+     * 代理获取地址
+     */
+    public static String proxyPath=properties.getProperty("proxyPath");
+    /**
+     * 是否启动代理
+     */
+    public static boolean isProxy= Boolean.parseBoolean(properties.getProperty("isProxy"));
 }

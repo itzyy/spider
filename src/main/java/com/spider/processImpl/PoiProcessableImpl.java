@@ -2,15 +2,21 @@ package com.spider.processImpl;
 
 import com.spider.domain.PoiPage;
 import com.spider.process.Processable;
+import com.spider.util.Config;
 import com.spider.util.HtmlUtil;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * 解析poi数据
  */
 public class PoiProcessableImpl implements Processable<PoiPage> {
+    //创建固定线程池
+    private ExecutorService fixedThreadPool = Executors.newCachedThreadPool();
 
     /**
      * 解析poi数据，
@@ -21,7 +27,7 @@ public class PoiProcessableImpl implements Processable<PoiPage> {
         //使用htmlcleaner解析对象
         HtmlCleaner htmlCleaner = new HtmlCleaner();
         //对页面进行封装。转换成一个tagnode对象,通过xpath对页面元素可以进行快速标记
-        TagNode rootNode = htmlCleaner.clean(page.getContext());
+        final TagNode rootNode = htmlCleaner.clean(page.getContext());
         try {
             //判断是否是第二页
             if (page.getUrl().startsWith("http://www.poi86.com/poi/province")) {
@@ -32,23 +38,30 @@ public class PoiProcessableImpl implements Processable<PoiPage> {
                     page.setAdd("http://www.poi86.com" + provinceStr);
                 }
             } else if (page.getUrl().startsWith("http://www.poi86.com/poi/district")) {//是否第三页
-                Object[] district = rootNode.evaluateXPath("//table//a");
-                //只选择名称href,不选择类型
-                TagNode districtNode = (TagNode) district[0];
-                String districtStr = districtNode.getAttributeByName("href");
-                page.setAdd("http://www.poi86.com" + districtStr);
-
-                //读取下一页地址
-                Object[] nextPages = rootNode.evaluateXPath("//ul[@class='pagination']//a");
-                if (nextPages != null && nextPages.length > 0) {
-                    Object nextPage = nextPages[nextPages.length - 3];
-                    TagNode node = (TagNode) nextPage;
-                    String href = node.getAttributeByName("href");
-                    String disabled = node.getParent().getAttributeByName("class");
-                    if (disabled == null) {
-                        page.setAdd("http://www.poi86.com" + href);
+                Object[] district = new Object[0];
+                try {
+                    district = rootNode.evaluateXPath("//table//tr/td[1]/a");
+                    for(Object obj : district){
+                        //只选择名称href,不选择类型
+                        TagNode districtNode = (TagNode) obj;
+                        String districtStr = districtNode.getAttributeByName("href");
+                        page.setAdd("http://www.poi86.com" + districtStr);
                     }
+                    //读取下一页地址
+                    Object[] nextPages = rootNode.evaluateXPath("//ul[@class='pagination']//a");
+                    if (nextPages != null && nextPages.length > 0) {
+                        Object nextPage = nextPages[nextPages.length - 3];
+                        TagNode node = (TagNode) nextPage;
+                        String href = node.getAttributeByName("href");
+                        String disabled = node.getParent().getAttributeByName("class");
+                        if (disabled == null) {
+                            page.setAdd("http://www.poi86.com" + href);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
 
             } else {
                 parse(rootNode, page);
@@ -57,6 +70,7 @@ public class PoiProcessableImpl implements Processable<PoiPage> {
             e.printStackTrace();
         }
     }
+
 
     /**
      * 解析具体的poi数据

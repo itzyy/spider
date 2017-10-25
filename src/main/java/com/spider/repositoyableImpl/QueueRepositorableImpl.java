@@ -18,4 +18,9 @@ public class QueueRepositorableImpl implements Repositoyable {
     public String poll() {
         return this.queue.poll();
     }
+
+    @Override
+    public void backUp(String key, String value) {
+
+    }
 }
